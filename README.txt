@@ -1,28 +1,25 @@
-Nomi Version 1.0.13
+Nomi GitHub Version 2.0.0
 
-GitHub Pages web build with responsive meditation screen.
+This ZIP is for the GitHub Pages version only.
 
-Changes in 1.0.13:
-1. The meditation screen is now responsive for phones, tablets, laptops and desktop screens.
-2. The breathing flower is constrained by viewport width, viewport height and safe areas so it does not extend beyond the display.
-3. Timer, breathing text and End button use safe-area aware positioning for iPhone/Android screens.
-4. The End button is now placed at the top right inside the visible screen instead of near the lower edge.
-5. The share mail text now includes both the web version and the Chrome extension.
-6. Audio is played with HTML5 Audio using relative files: ./einatmen.mp3, ./ausatmen.mp3, ./ende.mp3.
+What changed:
+- Simplified start screen: no duration/inhale/exhale sliders on the home screen.
+- Default duration: 1 Minute.
+- Default inhale: 4.5 Seconds.
+- Default exhale: 6.5 Seconds.
+- Settings are moved into a modal.
+- User settings are saved in localStorage and no longer reset after a session.
+- Fullscreen is optional and defaults to off.
+- Three animation themes are available: Ocean, Twilight, Forest.
+- App UI remains English.
+- Share email text remains German.
+- The responsive meditation screen from the GitHub version is preserved.
 
-Upload the contents of this ZIP directly into the GitHub repository root. Do not upload the ZIP itself.
-
-Files:
-- manifest.json
-- background.js
-- index.html
-- style.css
-- app.js
+Important:
+This ZIP does not include MP3 files so your existing sounds on GitHub are not overwritten.
+Keep these files in your repository unchanged:
 - einatmen.mp3
 - ausatmen.mp3
 - ende.mp3
-- icon.png
-- icon16.png
-- icon48.png
-- icon128.png
-- README.txt
+
+Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.

@@ -4,38 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Nomi</title>
-  <link rel="stylesheet" href="style_v114.css">
+  <link rel="stylesheet" href="style_v200.css">
 </head>
 <body>
   <main id="app" class="start-screen">
     <section class="start-content" aria-label="Nomi Start">
+      <button id="settingsButton" class="settings-button" type="button" aria-label="Settings">Settings</button>
+
       <div class="start-flower" aria-hidden="true">
         <span></span><span></span><span></span><span></span>
         <span></span><span></span><span></span><span></span>
       </div>
+
       <h1>Nomi</h1>
       <p class="subtitle">Breathing Meditation</p>
-      <div class="control-block">
-        <label for="duration"><span>Duration</span><span id="durationText">1 Minute</span></label>
-        <input type="range" id="duration" min="1" max="10" value="1" step="1">
-      </div>
-      <div class="control-block">
-        <label for="inhaleSeconds"><span>Inhale</span><span><span id="inhaleValue">4</span> Seconds</span></label>
-        <input type="range" id="inhaleSeconds" min="4" max="8" value="4" step="0.5">
-      </div>
-      <div class="control-block">
-        <label for="exhaleSeconds"><span>Exhale</span><span><span id="exhaleValue">6</span> Seconds</span></label>
-        <input type="range" id="exhaleSeconds" min="4" max="8" value="6" step="0.5">
-      </div>
-      <div class="start-options" aria-label="Session Options">
-        <label class="option-row"><span>Show Remaining Time</span><input id="showTimerStart" type="checkbox" checked></label>
-        <label class="option-row"><span>Show Breathing Text</span><input id="showPhaseTextStart" type="checkbox" checked></label>
-        <label class="option-row"><span>Enable Breathing Sound</span><input id="soundStart" type="checkbox" checked></label>
-      </div>
+      <p id="sessionSummary" class="session-summary">1 Minute</p>
+
       <button id="startButton" type="button">Start</button>
       <a id="shareLink" class="share-link" href="#">Share Nomi</a>
     </section>
+
+    <section id="settingsModal" class="modal" aria-label="Settings" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="modal-header">
+          <h2 id="settingsTitle">Settings</h2>
+          <button id="closeSettingsButton" class="close-button" type="button" aria-label="Close Settings">Close</button>
+        </div>
+
+        <div class="settings-section">
+          <h3>Theme</h3>
+          <div class="segmented" role="radiogroup" aria-label="Theme">
+            <label><input type="radio" name="theme" value="ocean"><span>Ocean</span></label>
+            <label><input type="radio" name="theme" value="twilight"><span>Twilight</span></label>
+            <label><input type="radio" name="theme" value="forest"><span>Forest</span></label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Duration</h3>
+          <div class="segmented" role="radiogroup" aria-label="Duration">
+            <label><input type="radio" name="duration" value="1"><span>1 min</span></label>
+            <label><input type="radio" name="duration" value="3"><span>3 min</span></label>
+            <label><input type="radio" name="duration" value="5"><span>5 min</span></label>
+            <label><input type="radio" name="duration" value="10"><span>10 min</span></label>
+          </div>
+        </div>
+
+        <div class="settings-section two-columns">
+          <label class="input-row" for="inhaleSeconds"><span>Inhale</span><input id="inhaleSeconds" type="number" min="4" max="8" step="0.5" inputmode="decimal"><small>Seconds</small></label>
+          <label class="input-row" for="exhaleSeconds"><span>Exhale</span><input id="exhaleSeconds" type="number" min="4" max="8" step="0.5" inputmode="decimal"><small>Seconds</small></label>
+        </div>
+
+        <div class="settings-section switches">
+          <label><span>Show Remaining Time</span><input id="showTimerToggle" type="checkbox"></label>
+          <label><span>Show Breathing Text</span><input id="showPhaseTextToggle" type="checkbox"></label>
+          <label><span>Breathing Sound</span><input id="soundToggle" type="checkbox"></label>
+          <label><span>Start in Fullscreen</span><input id="fullscreenToggle" type="checkbox"></label>
+        </div>
+
+        <button id="saveSettingsButton" class="save-button" type="button">Save Settings</button>
+      </div>
+    </section>
   </main>
-  <script src="app_v114.js"></script>
+  <script src="app_v200.js"></script>
 </body>
 </html>
