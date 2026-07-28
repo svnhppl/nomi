@@ -1,20 +1,14 @@
-Nomi Version 1.0.11
+Nomi Version 1.0.12
 
-Changes in 1.0.11:
-1. Added an end-of-meditation sound file: ende.mp3.
-2. ende.mp3 is played after the final exhale has completed.
-3. ende.mp3 starts about 0.5 seconds after the exhale sound has ended.
-4. The Completed text appears after the end sound has finished.
-5. manifest.json now exposes einatmen.mp3, ausatmen.mp3 and ende.mp3.
-6. The included ende.mp3 is a placeholder and can be replaced with your real end sound file.
+GitHub Pages web build.
 
-Current Defaults:
-- Inhale: 4 Seconds
-- Exhale: 6 Seconds
-- Inhale/Exhale Range: 4-8 Seconds
-- Inhale Audio File: einatmen.mp3
-- Exhale Audio File: ausatmen.mp3
-- End Audio File: ende.mp3
+Changes in 1.0.12:
+1. Audio loading now works on GitHub Pages because app.js uses relative URLs like ./einatmen.mp3 instead of chrome.runtime.getURL().
+2. The app no longer depends on the Chrome extension runtime when opened as a website.
+3. If an audio file cannot be loaded or decoded, Nomi uses a generated fallback tone so the site still has sound.
+4. You can replace the included placeholder files with real MP3 files using exactly these file names: einatmen.mp3, ausatmen.mp3, ende.mp3.
+
+Upload the contents of this ZIP directly into the GitHub repository root. Do not upload the ZIP itself.
 
 Files:
 - manifest.json

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Nomi",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "A minimalist breathing meditation for Chrome.",
   "action": {
     "default_title": "Nomi"
