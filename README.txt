@@ -1,19 +1,18 @@
-Nomi GitHub Version 2.0.0
+Nomi GitHub Version 2.0.1
 
 This ZIP is for the GitHub Pages version only.
 
 What changed:
-- Simplified start screen: no duration/inhale/exhale sliders on the home screen.
-- Default duration: 1 Minute.
-- Default inhale: 4.5 Seconds.
-- Default exhale: 6.5 Seconds.
-- Settings are moved into a modal.
-- User settings are saved in localStorage and no longer reset after a session.
-- Fullscreen is optional and defaults to off.
-- Three animation themes are available: Ocean, Twilight, Forest.
-- App UI remains English.
-- Share email text remains German.
-- The responsive meditation screen from the GitHub version is preserved.
+- Fallback tones have been completely removed.
+- The code no longer contains AudioContext/Oscillator fallback generation.
+- Nomi now only tries to play the actual audio files:
+  - einatmen.mp3
+  - ausatmen.mp3
+  - ende.mp3
+- If one of these files cannot be played, Nomi will stay silent for that sound instead of generating a synthetic tone.
+- The simplified start screen, settings modal, saved user settings, optional fullscreen, and three themes remain unchanged.
+- The app UI remains English.
+- The share email text remains German.
 
 Important:
 This ZIP does not include MP3 files so your existing sounds on GitHub are not overwritten.
@@ -23,3 +22,6 @@ Keep these files in your repository unchanged:
 - ende.mp3
 
 Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.
+The new index.html now uses:
+- app_v201.js
+- style_v201.css
