@@ -1,19 +1,14 @@
-Nomi GitHub Version 2.0.2
+Nomi GitHub Version 2.0.3
 
 This ZIP is for the GitHub Pages version only.
 
 What changed:
-- iPhone audio handling was changed again: audio elements are now created once and reused.
-- Nomi no longer creates a new Audio object for every inhale/exhale phase.
+- The Settings modal has been made more compact and responsive for iPhone screens.
+- The modal is designed so all settings should fit without scrolling on small screens.
+- Spacing, font sizes, segmented controls, input fields and switches are reduced on smaller heights.
+- The iPhone audio handling from v2.0.2 remains unchanged.
 - Fallback tones remain removed.
-- Nomi only plays the actual audio files:
-  - einatmen.mp3
-  - ausatmen.mp3
-  - ende.mp3
-- The Settings link is centered so it cannot be cut off at the right edge on iPhone.
-- The Start button is now proportional to the word and no longer full-width.
-- Small-screen start layout remains vertically centered.
-- The settings modal, saved user settings, optional fullscreen, and three themes remain unchanged.
+- The Start button and centered Settings link remain unchanged.
 
 Important:
 This ZIP does not include MP3 files so your existing sounds on GitHub are not overwritten.
@@ -24,5 +19,5 @@ Keep these files unchanged:
 
 Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.
 The new index.html now uses:
-- app_v202.js
-- style_v202.css
+- app_v203.js
+- style_v203.css
