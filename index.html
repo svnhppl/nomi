@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Nomi</title>
-  <link rel="stylesheet" href="style_v203.css">
+  <link rel="stylesheet" href="style_v204.css">
 </head>
 <body>
   <main id="app" class="start-screen">
@@ -50,9 +50,12 @@
           </div>
         </div>
 
-        <div class="settings-section two-columns">
-          <label class="input-row" for="inhaleSeconds"><span>Inhale</span><input id="inhaleSeconds" type="number" min="4" max="8" step="0.5" inputmode="decimal"><small>Seconds</small></label>
-          <label class="input-row" for="exhaleSeconds"><span>Exhale</span><input id="exhaleSeconds" type="number" min="4" max="8" step="0.5" inputmode="decimal"><small>Seconds</small></label>
+        <div class="settings-section">
+          <h3>Breathing Rhythm</h3>
+          <div class="rhythm-options" role="radiogroup" aria-label="Breathing Rhythm">
+            <label><input type="radio" name="rhythm" value="balanced"><span><strong>Balanced</strong><small>Inhale 4.5 sec · Exhale 4.5 sec</small></span></label>
+            <label><input type="radio" name="rhythm" value="longerExhale"><span><strong>Longer Exhale</strong><small>Inhale 4.5 sec · Exhale 6.5 sec</small></span></label>
+          </div>
         </div>
 
         <div class="settings-section switches">
@@ -66,6 +69,6 @@
       </div>
     </section>
   </main>
-  <script src="app_v203.js"></script>
+  <script src="app_v204.js"></script>
 </body>
 </html>

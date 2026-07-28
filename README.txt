@@ -1,14 +1,18 @@
-Nomi GitHub Version 2.0.3
+Nomi GitHub Version 2.0.4
 
 This ZIP is for the GitHub Pages version only.
 
 What changed:
-- The Settings modal has been made more compact and responsive for iPhone screens.
-- The modal is designed so all settings should fit without scrolling on small screens.
-- Spacing, font sizes, segmented controls, input fields and switches are reduced on smaller heights.
-- The iPhone audio handling from v2.0.2 remains unchanged.
+- Manual Inhale/Exhale number fields have been removed.
+- Settings now use a simple Breathing Rhythm choice:
+  - Balanced: Inhale 4.5 sec · Exhale 4.5 sec
+  - Longer Exhale: Inhale 4.5 sec · Exhale 6.5 sec
+- Default rhythm remains Longer Exhale.
+- This is easier to use on iPhone and prevents difficult number entry.
+- App UI remains English.
+- Share email text remains German.
+- The compact settings modal and iPhone audio handling remain in place.
 - Fallback tones remain removed.
-- The Start button and centered Settings link remain unchanged.
 
 Important:
 This ZIP does not include MP3 files so your existing sounds on GitHub are not overwritten.
@@ -19,5 +23,5 @@ Keep these files unchanged:
 
 Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.
 The new index.html now uses:
-- app_v203.js
-- style_v203.css
+- app_v204.js
+- style_v204.css
