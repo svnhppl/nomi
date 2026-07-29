@@ -1,17 +1,17 @@
-Nomi GitHub Version 2.1.4
+Nomi GitHub Version 2.1.6
 
 This ZIP contains all files for the GitHub Pages version.
 
+Basis:
+- This version is based on the last stable working version 2.1.4.
+- No start screen design changes were made.
+- No settings panel redesign was added.
+
 What changed:
-- Pause now pauses any currently playing breathing sound without resetting its position.
-- Resume now continues the paused breathing sound from the same audio position.
-- Resume no longer forces a new inhale or exhale sound at the resume moment.
-- End still resets audio and returns to the start screen.
-- Start screen simplified:
-  - The visible "1 Minute" summary has been removed.
-  - "Share Nomi" is now just "Share".
-  - "Nomi" and "Breathing Meditation" now use the same theme color.
-- All visible controls remain in English.
+- A screen wake lock is requested when the meditation starts.
+- The screen wake lock is released when the meditation ends or when the session is manually ended.
+- If the browser or device does not support screen wake lock, Nomi continues normally without showing an error.
+- Existing pause/resume sound handling, start screen, progress bar, themes and animation styles remain unchanged.
 
 Important:
 This ZIP does not include MP3 files so your existing sounds on GitHub are not overwritten.
@@ -22,5 +22,5 @@ Keep these files unchanged:
 
 Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.
 The new index.html now uses:
-- app_v214.js
-- style_v214.css
+- app_v216.js
+- style_v216.css
