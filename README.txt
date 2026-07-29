@@ -1,17 +1,15 @@
-Nomi GitHub Version 2.0.7
+Nomi GitHub Version 2.0.8
 
 This ZIP is for the GitHub Pages version only.
 
 What changed:
-- Settings were redesigned to be calm, simple, and consistent with Nomi.
-- The popup is now a clean stacked layout on web and mobile.
-- The previous dashboard-like multi-column layout was removed.
-- Animation Style replaces the more technical word Geometry.
-- Rhythm labels are shorter: Balanced and Longer Exhale with compact timing hints.
-- The Save button is now small and calm instead of a large dominant block.
-- Mobile and desktop use the same visual hierarchy with responsive spacing.
-- Petals and Orbs remain available.
-- Themes, durations, breathing rhythms, switches, iPhone audio handling, and no-fallback audio behavior remain unchanged.
+- Countdown and Prepare colors now stay within the active theme spectrum.
+- Countdown and Prepare are lighter than the animation and use a subtle dark contrast halo for better readability on top of the graphic.
+- Ocean, Twilight, and Forest each have their own matching countdown color.
+- The Share Nomi mail text has been shortened and now only links to the web version.
+- The mail body now starts with: "ich möchte diese kleine Atemmeditation mit dir teilen."
+- The Chrome Web Store link has been removed from the mail body.
+- Existing layout, themes, animation styles, breathing rhythm, iPhone audio handling, and no-fallback audio behavior remain unchanged.
 
 Important:
 This ZIP does not include MP3 files so your existing sounds on GitHub are not overwritten.
@@ -22,5 +20,5 @@ Keep these files unchanged:
 
 Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.
 The new index.html now uses:
-- app_v207.js
-- style_v207.css
+- app_v208.js
+- style_v208.css
