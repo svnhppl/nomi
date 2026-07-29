@@ -1,14 +1,14 @@
-Nomi GitHub Version 2.1.2
+Nomi GitHub Version 2.1.3
 
 This ZIP contains all files for the GitHub Pages version.
 
 What changed:
-- During meditation, only the animation, Inhale/Exhale text and progress bar are visible.
-- Tapping anywhere shows a very small interaction menu at the bottom.
-- The menu does not cover the animation, breathing text or progress bar.
+- Fixed the issue where tapping during meditation returned directly to the start screen.
+- The invisible Completed layer no longer intercepts taps while the meditation is running.
+- Tapping anywhere during the active meditation now shows the bottom menu.
 - The menu contains: Pause and End.
-- Pause stops the animation, breathing cycle, progress bar and sound.
-- While paused, Pause changes to Resume.
+- The menu auto-hides after a short moment while the meditation continues.
+- Pause keeps the menu visible and changes Pause to Resume.
 - Resume continues the meditation from the paused position.
 - End exits the meditation and returns to the start screen.
 - Completed still appears only after a regular completed session.
@@ -23,5 +23,5 @@ Keep these files unchanged:
 
 Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.
 The new index.html now uses:
-- app_v212.js
-- style_v212.css
+- app_v213.js
+- style_v213.css
