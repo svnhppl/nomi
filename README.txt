@@ -1,4 +1,4 @@
-Nomi GitHub Version 2.1.7
+Nomi GitHub Version 2.1.8
 
 This ZIP contains all files for the GitHub Pages version.
 
@@ -8,11 +8,11 @@ Basis:
 - No settings panel redesign was added.
 
 What changed:
+- The Prepare countdown is no longer positioned over the animated graphic.
+- During Prepare, the graphic is given more space above and the Prepare countdown sits below it.
 - Wake Lock is included, so supported mobile browsers should keep the display awake during meditation.
-- The mailto subject is now: "Nomi – Atemmeditation für mehr Ruhe im Alltag".
-- The mail body now says: "Du kannst Nomi direkt im Browser nutzen:".
-- The old Chrome extension subject was removed.
-- The old "Als Webseite:" label was removed from the mail body.
+- The mailto subject is: "Nomi – Atemmeditation für mehr Ruhe im Alltag".
+- The mail body says: "Du kannst Nomi direkt im Browser nutzen:".
 - Existing pause/resume sound handling, start screen, progress bar, themes and animation styles remain unchanged.
 
 Important:
@@ -24,5 +24,5 @@ Keep these files unchanged:
 
 Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.
 The new index.html now uses:
-- app_v217.js
-- style_v217.css
+- app_v218.js
+- style_v218.css
