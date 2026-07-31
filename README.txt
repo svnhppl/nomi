@@ -1,16 +1,18 @@
-Nomi GitHub Version 2.2.4
+Nomi GitHub Version 2.2.5
 
-This ZIP contains the GitHub Pages version.
+This ZIP contains the GitHub Pages update for the Prepare-to-meditation transition.
 
 Basis:
-- Continues from v2.2.3.
-- No design changes to the start screen, Settings popup, meditation layout, animation, audio, Wake Lock or auto-return.
+- Uses the current Nomi structure and keeps the existing CSS file style_v224.css unchanged.
+- No changes to the Settings popup design.
+- No changes to the start screen design.
+- No changes to MP3 files.
 
 What changed:
-- Bugfix: "Prepare" no longer remains visible after the preparation phase.
-- The numeric countdown remains removed.
-- During Prepare, only the word "Prepare" gently fades out.
-- When the meditation begins, the Prepare element is explicitly hidden so it cannot reappear during Inhale/Exhale.
+- During the Prepare phase, the breathing graphic is animated to the maximum inhale state.
+- The word "Prepare" still fades out during the existing Prepare time.
+- When the meditation begins, the first active breathing phase is Exhale.
+- This is intended to remove the visual jump between Prepare and the breathing animation.
 
 Important:
 This ZIP does not include MP3 files so your existing sounds on GitHub are not overwritten.
@@ -19,7 +21,7 @@ Keep these files unchanged:
 - ausatmen.mp3
 - ende.mp3
 
-Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.
+Upload these files to the GitHub repository root and overwrite where GitHub asks.
 The new index.html now uses:
-- app_v224.js
+- app_v225.js
 - style_v224.css

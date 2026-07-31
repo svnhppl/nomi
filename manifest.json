@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Nomi",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "A minimalist breathing meditation for Chrome.",
   "action": {
     "default_title": "Nomi"
@@ -17,9 +17,16 @@
   "web_accessible_resources": [
     {
       "resources": [
+        "index.html",
+        "style_v224.css",
+        "app_v225.js",
         "einatmen.mp3",
         "ausatmen.mp3",
-        "ende.mp3"
+        "ende.mp3",
+        "icon.png",
+        "icon16.png",
+        "icon48.png",
+        "icon128.png"
       ],
       "matches": [
         "<all_urls>"
