@@ -1,27 +1,28 @@
-Nomi GitHub Version 2.2.6
+Nomi GitHub Version 2.2.7
 
-This ZIP contains the GitHub Pages update for the Prepare-to-meditation transition.
+This ZIP contains the corrected implementation for Orbs with a real central orb.
 
 Basis:
-- Uses the current Nomi structure and keeps the existing CSS file style_v224.css unchanged.
-- No changes to the Settings popup design.
-- No changes to the start screen design.
-- No changes to MP3 files.
+- Continues the v2.2.6 transition behavior: Prepare contracts to minimum exhale and the meditation starts with Inhale.
+- Uses the existing CSS file style_v224.css unchanged.
+- No changes to Settings popup design, start screen design, audio files, Wake Lock or auto-return behavior.
 
 What changed:
-- During the Prepare phase, the breathing graphic contracts from the maximum inhale state to the minimum exhale state.
-- The word "Prepare" still fades out during the existing Prepare time.
-- When the meditation begins, the first active breathing phase is Inhale.
-- This is intended to create a calm, clear start point for the first breath.
+- In Orbs mode, the animation now creates 8 outer Orbs plus 1 dedicated central Orb.
+- The central Orb has its own class: center-orb.
+- The central Orb does not move radially outward.
+- The central Orb stays exactly in the center and scales only slightly with the breathing phase.
+- This is intended to reduce or remove the visible donut-shaped hole during exhale.
 
 Important:
-This ZIP does not include MP3 files so your existing sounds on GitHub are not overwritten.
-Keep these files unchanged:
+This ZIP does not include MP3 files and does not include a new CSS file.
+Keep these files unchanged on GitHub:
+- style_v224.css
 - einatmen.mp3
 - ausatmen.mp3
 - ende.mp3
 
 Upload these files to the GitHub repository root and overwrite where GitHub asks.
 The new index.html now uses:
-- app_v226.js
+- app_v227.js
 - style_v224.css
