@@ -1,6 +1,6 @@
-Nomi GitHub Version 2.2.7
+Nomi GitHub Version 2.2.8
 
-This ZIP contains the corrected implementation for Orbs with a real central orb.
+This ZIP contains a revised Orbs animation test.
 
 Basis:
 - Continues the v2.2.6 transition behavior: Prepare contracts to minimum exhale and the meditation starts with Inhale.
@@ -8,11 +8,15 @@ Basis:
 - No changes to Settings popup design, start screen design, audio files, Wake Lock or auto-return behavior.
 
 What changed:
-- In Orbs mode, the animation now creates 8 outer Orbs plus 1 dedicated central Orb.
-- The central Orb has its own class: center-orb.
-- The central Orb does not move radially outward.
-- The central Orb stays exactly in the center and scales only slightly with the breathing phase.
-- This is intended to reduce or remove the visible donut-shaped hole during exhale.
+- The prior central Orb approach was removed.
+- Orbs mode now uses the original 8 Orbs again.
+- The Orbs are more compact, especially near the minimum/exhale state.
+- The Orbs are larger, so the inner overlaps close the visible donut-like hole more naturally.
+
+Technical direction:
+- minimum radial distance reduced
+- orb scaling increased
+- outer expansion still retained for breathing movement
 
 Important:
 This ZIP does not include MP3 files and does not include a new CSS file.
@@ -24,5 +28,5 @@ Keep these files unchanged on GitHub:
 
 Upload these files to the GitHub repository root and overwrite where GitHub asks.
 The new index.html now uses:
-- app_v227.js
+- app_v228.js
 - style_v224.css
