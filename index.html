@@ -5,70 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Nomi</title>
   <link rel="stylesheet" href="style_v224.css">
+  <style>
+    /* v2.2.9 start screen tools: centered icon row, theme-colored, calm and minimal. */
+    .start-content .settings-button,
+    .start-content .share-link{
+      margin:0;
+      padding:0;
+      width:34px;
+      height:34px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:0;
+      border-radius:999px;
+      background:transparent;
+      color:var(--accent);
+      line-height:1;
+      text-decoration:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .start-content .settings-button{opacity:.78;}
+    .start-content .share-link{opacity:.42;}
+    .start-content .settings-button:hover,
+    .start-content .share-link:hover,
+    .start-content .settings-button:active,
+    .start-content .share-link:active{
+      opacity:.95;
+      background:rgba(var(--petal-1),.07);
+      text-decoration:none;
+    }
+    .start-tools{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:26px;
+      margin:24px auto 0;
+    }
+    .start-tools svg{
+      width:23px;
+      height:23px;
+      display:block;
+      fill:currentColor;
+    }
+    .start-content #startButton{margin-top:0;}
+    @media (max-height:650px){
+      .start-tools{margin-top:14px;gap:24px;}
+      .start-tools svg{width:21px;height:21px;}
+      .start-content .settings-button,
+      .start-content .share-link{width:32px;height:32px;}
+    }
+  </style>
 </head>
 <body>
   <main id="app" class="start-screen">
     <section class="start-content" aria-label="Nomi Start">
-      <button id="settingsButton" class="settings-button" type="button" aria-label="Settings">Settings</button>
-      <div class="start-flower" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
+      <div class="start-flower" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
       <h1>Nomi</h1>
       <p class="subtitle">Breathing Meditation</p>
       <p id="sessionSummary" class="session-summary" hidden></p>
       <button id="startButton" type="button">Start</button>
-      <a id="shareLink" class="share-link" href="#">Share</a>
+      <div class="start-tools" aria-label="Secondary actions">
+        <button id="settingsButton" class="settings-button" type="button" aria-label="Settings">
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="6" y="12" width="52" height="7" rx="3.5"></rect><circle cx="30" cy="15.5" r="8.5"></circle><rect x="6" y="29" width="52" height="7" rx="3.5"></rect><circle cx="43" cy="32.5" r="8.5"></circle><rect x="6" y="46" width="52" height="7" rx="3.5"></rect><circle cx="22" cy="49.5" r="8.5"></circle></svg>
+        </button>
+        <a id="shareLink" class="share-link" href="#" aria-label="Share">
+          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="18" cy="32" r="9"></circle><circle cx="47" cy="16" r="9"></circle><circle cx="47" cy="48" r="9"></circle><rect x="22" y="22" width="28" height="7" rx="3.5" transform="rotate(-29 36 25.5)"></rect><rect x="22" y="35" width="28" height="7" rx="3.5" transform="rotate(29 36 38.5)"></rect></svg>
+        </a>
+      </div>
     </section>
     <section id="settingsModal" class="modal" aria-label="Settings" hidden>
       <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-        <div class="modal-header">
-          <h2 id="settingsTitle">Settings</h2>
-          <button id="closeSettingsButton" class="close-button" type="button" aria-label="Close Settings">Close</button>
-        </div>
-        <div class="settings-section theme-section">
-          <h3>Theme</h3>
-          <div class="segmented theme-options" role="radiogroup" aria-label="Theme">
-            <label><input type="radio" name="theme" value="ocean"><span>Ocean</span></label>
-            <label><input type="radio" name="theme" value="twilight"><span>Twilight</span></label>
-            <label><input type="radio" name="theme" value="forest"><span>Forest</span></label>
-          </div>
-        </div>
-        <div class="settings-section geometry-section">
-          <h3>Animation Style</h3>
-          <div class="segmented geometry-options" role="radiogroup" aria-label="Animation Style">
-            <label><input type="radio" name="geometry" value="petals"><span>Petals</span></label>
-            <label><input type="radio" name="geometry" value="orbs"><span>Orbs</span></label>
-          </div>
-        </div>
-        <div class="settings-section duration-section">
-          <h3>Duration</h3>
-          <div class="segmented duration-options" role="radiogroup" aria-label="Duration">
-            <label><input type="radio" name="duration" value="1"><span>1 min</span></label>
-            <label><input type="radio" name="duration" value="3"><span>3 min</span></label>
-            <label><input type="radio" name="duration" value="5"><span>5 min</span></label>
-            <label><input type="radio" name="duration" value="10"><span>10 min</span></label>
-          </div>
-        </div>
-        <div class="settings-section rhythm-section">
-          <h3>Breathing Rhythm</h3>
-          <div class="rhythm-options" role="radiogroup" aria-label="Breathing Rhythm">
-            <label><input type="radio" name="rhythm" value="balanced"><span><strong>Balanced</strong><small>4.5 / 4.5 sec</small></span></label>
-            <label><input type="radio" name="rhythm" value="longerExhale"><span><strong>Longer Exhale</strong><small>4.5 / 6.5 sec</small></span></label>
-          </div>
-        </div>
-        <div class="settings-section switches">
-          <label><span>Show Remaining Time</span><input id="showTimerToggle" type="checkbox"></label>
-          <label><span>Show Breathing Text</span><input id="showPhaseTextToggle" type="checkbox"></label>
-          <label><span>Breathing Sound</span><input id="soundToggle" type="checkbox"></label>
-          <label><span>Start in Fullscreen</span><input id="fullscreenToggle" type="checkbox"></label>
-        </div>
-        <div class="settings-actions">
-          <button id="saveSettingsButton" class="save-button" type="button">Save</button>
-        </div>
+        <div class="modal-header"><h2 id="settingsTitle">Settings</h2><button id="closeSettingsButton" class="close-button" type="button" aria-label="Close Settings">Close</button></div>
+        <div class="settings-section theme-section"><h3>Theme</h3><div class="segmented theme-options" role="radiogroup" aria-label="Theme"><label><input type="radio" name="theme" value="ocean"><span>Ocean</span></label><label><input type="radio" name="theme" value="twilight"><span>Twilight</span></label><label><input type="radio" name="theme" value="forest"><span>Forest</span></label></div></div>
+        <div class="settings-section geometry-section"><h3>Animation Style</h3><div class="segmented geometry-options" role="radiogroup" aria-label="Animation Style"><label><input type="radio" name="geometry" value="petals"><span>Petals</span></label><label><input type="radio" name="geometry" value="orbs"><span>Orbs</span></label></div></div>
+        <div class="settings-section duration-section"><h3>Duration</h3><div class="segmented duration-options" role="radiogroup" aria-label="Duration"><label><input type="radio" name="duration" value="1"><span>1 min</span></label><label><input type="radio" name="duration" value="3"><span>3 min</span></label><label><input type="radio" name="duration" value="5"><span>5 min</span></label><label><input type="radio" name="duration" value="10"><span>10 min</span></label></div></div>
+        <div class="settings-section rhythm-section"><h3>Breathing Rhythm</h3><div class="rhythm-options" role="radiogroup" aria-label="Breathing Rhythm"><label><input type="radio" name="rhythm" value="balanced"><span><strong>Balanced</strong><small>4.5 / 4.5 sec</small></span></label><label><input type="radio" name="rhythm" value="longerExhale"><span><strong>Longer Exhale</strong><small>4.5 / 6.5 sec</small></span></label></div></div>
+        <div class="settings-section switches"><label><span>Show Remaining Time</span><input id="showTimerToggle" type="checkbox"></label><label><span>Show Breathing Text</span><input id="showPhaseTextToggle" type="checkbox"></label><label><span>Breathing Sound</span><input id="soundToggle" type="checkbox"></label><label><span>Start in Fullscreen</span><input id="fullscreenToggle" type="checkbox"></label></div>
+        <div class="settings-actions"><button id="saveSettingsButton" class="save-button" type="button">Save</button></div>
       </div>
     </section>
   </main>
-  <script src="app_v228.js"></script>
+  <script src="app_v229.js"></script>
 </body>
 </html>
