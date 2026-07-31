@@ -1,26 +1,19 @@
-Nomi GitHub Version 2.2.2
-This ZIP contains all files for the GitHub Pages version.
+Nomi GitHub Version 2.2.3
+
+This ZIP contains the GitHub Pages version.
 
 Basis:
-- This version continues from the current popup-only line.
-- No start screen design changes were made.
-- No meditation screen layout changes were made.
-- No audio behavior changes were made.
+- Continues from the current uploaded v2.2.2 files.
+- No changes to the start screen design.
+- No changes to Settings popup design.
+- No changes to audio behavior, Wake Lock, auto-return, themes, or meditation controls.
 
 What changed:
-- Only the Settings popup overlay and popup card transparency were adjusted.
-- The overlay remains black but is more transparent: rgba(0,0,0,.26).
-- Blur is fixed at 6px.
-- The Settings card is now semi-transparent, so the Nomi start screen remains visible behind it.
-- Theme-specific card colors are retained:
-  - Ocean: rgba(0,26,34,.78)
-  - Twilight: rgba(24,18,42,.78)
-  - Forest: rgba(10,34,30,.78)
-- The subtle fade/scale animation remains unchanged.
-
-Strict scope:
-- Only .modal / .modal-card and versioned file references were changed.
-- Start screen, animated graphic, Nomi title, Breathing Meditation text, Start button, Share link, meditation screen, Prepare position, Wake Lock, auto-return and audio remain unchanged.
+- The numeric Prepare countdown (3, 2, 1) was removed.
+- The word "Prepare" remains visible during the existing 3-second preparation time.
+- "Prepare" gently fades out until it disappears.
+- The animated graphic is no longer repositioned during Prepare.
+- This prevents the graphic from visually shifting when the meditation begins.
 
 Important:
 This ZIP does not include MP3 files so your existing sounds on GitHub are not overwritten.
@@ -31,5 +24,5 @@ Keep these files unchanged:
 
 Upload all files from this ZIP into the GitHub repository root and overwrite existing files where GitHub asks.
 The new index.html now uses:
-- app_v222.js
-- style_v222.css
+- app_v223.js
+- style_v223.css
