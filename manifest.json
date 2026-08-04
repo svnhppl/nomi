@@ -1,36 +1,31 @@
 {
-  "manifest_version": 3,
   "name": "Nomi",
-  "version": "2.2.9",
-  "description": "A minimalist breathing meditation for Chrome.",
-  "action": {
-    "default_title": "Nomi"
-  },
-  "background": {
-    "service_worker": "background.js"
-  },
-  "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
-  },
-  "web_accessible_resources": [
+  "short_name": "Nomi",
+  "description": "A minimalist breathing meditation for Chrome & Web.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0c",
+  "theme_color": "#0a0a0c",
+  "icons": [
     {
-      "resources": [
-        "index.html",
-        "style_v224.css",
-        "app_v229.js",
-        "einatmen.mp3",
-        "ausatmen.mp3",
-        "ende.mp3",
-        "icon.png",
-        "icon16.png",
-        "icon48.png",
-        "icon128.png"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icon128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "icon48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "icon16.png",
+      "sizes": "16x16",
+      "type": "image/png"
     }
   ]
 }
