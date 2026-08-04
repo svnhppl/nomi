@@ -12,45 +12,345 @@ ${shareWebUrl}
 Viele Grüße`;
 let settings=loadSettings(),animationFrameId=null,prepareAnimationFrameId=null,sessionEndsAt=null,currentPhase="prepare",endRequested=false,sessionStartTime=null,isSessionPaused=false,pauseStartedAt=null,sessionControlsHideTimer=null,pausedAudioKeys=[],wakeLock=null;
 let audioElements={inhale:null,exhale:null,end:null};
-const startButton=document.getElementById("startButton"),settingsButton=document.getElementById("settingsButton"),settingsModal=document.getElementById("settingsModal"),closeSettingsButton=document.getElementById("closeSettingsButton"),saveSettingsButton=document.getElementById("saveSettingsButton"),sessionSummary=document.getElementById("sessionSummary"),shareLink=document.getElementById("shareLink"),showTimerToggle=document.getElementById("showTimerToggle"),showPhaseTextToggle=document.getElementById("showPhaseTextToggle"),soundToggle=document.getElementById("soundToggle"),fullscreenToggle=document.getElementById("fullscreenToggle");
-shareLink.href=`mailto:?subject=${encodeURIComponent(shareSubject)}&body=${encodeURIComponent(shareBody)}`;
-applySettingsToUi();applyTheme(settings.theme);prepareAudioElements();
+
+function initApp(){
+  applySettingsToUi();
+  applyTheme(settings.theme);
+  prepareAudioElements();
+  bindStartScreenEvents();
+}
+
+function bindStartScreenEvents(){
+  const startBtn=document.getElementById("startButton"),
+        settingsBtn=document.getElementById("settingsButton"),
+        settingsMdl=document.getElementById("settingsModal"),
+        closeSettingsBtn=document.getElementById("closeSettingsButton"),
+        saveSettingsBtn=document.getElementById("saveSettingsButton"),
+        shareLnk=document.getElementById("shareLink");
+
+  if(shareLnk) shareLnk.href=`mailto:?subject=${encodeURIComponent(shareSubject)}&body=${encodeURIComponent(shareBody)}`;
+
+  if(startBtn){
+    startBtn.addEventListener("click",async()=>{
+      endRequested=false;
+      prepareAudioElements();
+      await unlockAudioElements();
+      await acquireWakeLock();
+      startSession();
+      if(settings.fullscreen){try{await document.documentElement.requestFullscreen()}catch(e){}}
+    });
+  }
+  if(settingsBtn) settingsBtn.addEventListener("click",openSettings);
+  if(closeSettingsBtn) closeSettingsBtn.addEventListener("click",closeSettings);
+  if(settingsMdl) settingsMdl.addEventListener("click",e=>{if(e.target===settingsMdl)closeSettings()});
+  if(saveSettingsBtn) saveSettingsBtn.addEventListener("click",saveSettingsFromUi);
+}
+
 async function acquireWakeLock(){try{if("wakeLock" in navigator){wakeLock=await navigator.wakeLock.request("screen");wakeLock.addEventListener("release",()=>wakeLock=null)}}catch(e){wakeLock=null}}
 function releaseWakeLock(){try{if(wakeLock){const lock=wakeLock;wakeLock=null;lock.release()}}catch(e){wakeLock=null}}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&sessionEndsAt&&currentPhase!=="finished"&&!isSessionPaused)acquireWakeLock()});
 window.addEventListener("beforeunload",releaseWakeLock);
-startButton.addEventListener("click",async()=>{endRequested=false;prepareAudioElements();await unlockAudioElements();await acquireWakeLock();startSession();if(settings.fullscreen){try{await document.documentElement.requestFullscreen()}catch(e){}}});
-settingsButton.addEventListener("click",openSettings);closeSettingsButton.addEventListener("click",closeSettings);settingsModal.addEventListener("click",e=>{if(e.target===settingsModal)closeSettings()});saveSettingsButton.addEventListener("click",saveSettingsFromUi);
+
 function loadSettings(){try{const saved={...DEFAULTS,...JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}")} ;if(!RHYTHMS[saved.rhythm])saved.rhythm="longerExhale";if(!["petals","orbs"].includes(saved.geometry))saved.geometry="orbs";return saved}catch(e){return {...DEFAULTS}}}
 function persistSettings(){localStorage.setItem(STORAGE_KEY,JSON.stringify(settings))}
 function currentRhythm(){return RHYTHMS[settings.rhythm]||RHYTHMS.longerExhale}
 function applyTheme(theme){document.documentElement.dataset.theme=theme||"ocean";document.documentElement.dataset.geometry=settings.geometry||"orbs"}
-function applySettingsToUi(){document.querySelectorAll('input[name="theme"]').forEach(i=>i.checked=i.value===settings.theme);document.querySelectorAll('input[name="geometry"]').forEach(i=>i.checked=i.value===settings.geometry);document.querySelectorAll('input[name="duration"]').forEach(i=>i.checked=Number(i.value)===Number(settings.duration));document.querySelectorAll('input[name="rhythm"]').forEach(i=>i.checked=i.value===settings.rhythm);showTimerToggle.checked=settings.showTimer;showPhaseTextToggle.checked=settings.showPhaseText;soundToggle.checked=settings.sound;fullscreenToggle.checked=settings.fullscreen;updateSummary()}
-function updateSummary(){sessionSummary.textContent=Number(settings.duration)===1?"1 Minute":`${settings.duration} Minutes`}
-function openSettings(){applySettingsToUi();settingsModal.hidden=false;settingsModal.classList.remove("closing");requestAnimationFrame(()=>settingsModal.classList.add("open"))}
-function closeSettings(){settingsModal.classList.remove("open");settingsModal.classList.add("closing");setTimeout(()=>{settingsModal.hidden=true;settingsModal.classList.remove("closing")},170)}
-function saveSettingsFromUi(){const theme=document.querySelector('input[name="theme"]:checked'),geometry=document.querySelector('input[name="geometry"]:checked'),duration=document.querySelector('input[name="duration"]:checked'),rhythm=document.querySelector('input[name="rhythm"]:checked');settings={theme:theme?theme.value:"ocean",geometry:geometry?geometry.value:"orbs",duration:duration?Number(duration.value):1,rhythm:rhythm?rhythm.value:"longerExhale",showTimer:showTimerToggle.checked,showPhaseText:showPhaseTextToggle.checked,sound:soundToggle.checked,fullscreen:fullscreenToggle.checked};persistSettings();applySettingsToUi();applyTheme(settings.theme);closeSettings()}
+function applySettingsToUi(){
+  const showTimerToggle=document.getElementById("showTimerToggle"),
+        showPhaseTextToggle=document.getElementById("showPhaseTextToggle"),
+        soundToggle=document.getElementById("soundToggle"),
+        fullscreenToggle=document.getElementById("fullscreenToggle");
+  document.querySelectorAll('input[name="theme"]').forEach(i=>i.checked=i.value===settings.theme);
+  document.querySelectorAll('input[name="geometry"]').forEach(i=>i.checked=i.value===settings.geometry);
+  document.querySelectorAll('input[name="duration"]').forEach(i=>i.checked=Number(i.value)===Number(settings.duration));
+  document.querySelectorAll('input[name="rhythm"]').forEach(i=>i.checked=i.value===settings.rhythm);
+  if(showTimerToggle) showTimerToggle.checked=settings.showTimer;
+  if(showPhaseTextToggle) showPhaseTextToggle.checked=settings.showPhaseText;
+  if(soundToggle) soundToggle.checked=settings.sound;
+  if(fullscreenToggle) fullscreenToggle.checked=settings.fullscreen;
+  updateSummary();
+}
+function updateSummary(){const el=document.getElementById("sessionSummary");if(el) el.textContent=Number(settings.duration)===1?"1 Minute":`${settings.duration} Minutes`}
+function openSettings(){
+  const settingsModal=document.getElementById("settingsModal");
+  applySettingsToUi();
+  if(settingsModal){
+    settingsModal.hidden=false;
+    settingsModal.classList.remove("closing");
+    requestAnimationFrame(()=>settingsModal.classList.add("open"));
+  }
+}
+function closeSettings(){
+  const settingsModal=document.getElementById("settingsModal");
+  if(settingsModal){
+    settingsModal.classList.remove("open");
+    settingsModal.classList.add("closing");
+    setTimeout(()=>{settingsModal.hidden=true;settingsModal.classList.remove("closing")},170);
+  }
+}
+function saveSettingsFromUi(){
+  const theme=document.querySelector('input[name="theme"]:checked'),
+        geometry=document.querySelector('input[name="geometry"]:checked'),
+        duration=document.querySelector('input[name="duration"]:checked'),
+        rhythm=document.querySelector('input[name="rhythm"]:checked'),
+        showTimerToggle=document.getElementById("showTimerToggle"),
+        showPhaseTextToggle=document.getElementById("showPhaseTextToggle"),
+        soundToggle=document.getElementById("soundToggle"),
+        fullscreenToggle=document.getElementById("fullscreenToggle");
+  settings={
+    theme:theme?theme.value:"ocean",
+    geometry:geometry?geometry.value:"orbs",
+    duration:duration?Number(duration.value):1,
+    rhythm:rhythm?rhythm.value:"longerExhale",
+    showTimer:showTimerToggle?showTimerToggle.checked:true,
+    showPhaseText:showPhaseTextToggle?showPhaseTextToggle.checked:true,
+    sound:soundToggle?soundToggle.checked:true,
+    fullscreen:fullscreenToggle?fullscreenToggle.checked:false
+  };
+  persistSettings();
+  applySettingsToUi();
+  applyTheme(settings.theme);
+  closeSettings();
+}
 function prepareAudioElements(){Object.keys(audioFiles).forEach(k=>{if(!audioElements[k]||audioElements[k].src.indexOf(audioFiles[k].replace('./',''))===-1){const a=new Audio(audioFiles[k]);a.preload="auto";a.playsInline=true;a.volume=.85;a.load();audioElements[k]=a}})}
 async function unlockAudioElements(){if(!settings.sound)return;for(const k of Object.keys(audioElements)){const a=audioElements[k];if(!a)continue;try{a.muted=true;a.currentTime=0;const p=a.play();if(p)await p;a.pause();a.currentTime=0;a.muted=false}catch(e){try{a.muted=false;a.pause();a.currentTime=0}catch(x){}}}}
 function petalSvg(){return `<svg class="petal-svg" viewBox="0 0 100 180" preserveAspectRatio="none"><defs><radialGradient id="petalGradient" cx="56%" cy="38%" r="72%"><stop class="petal-stop-1" offset="0%"/><stop class="petal-stop-2" offset="58%"/><stop class="petal-stop-3" offset="100%"/></radialGradient></defs><path class="petal-fill" d="M50 4 C72 16 91 45 84 82 C78 113 57 145 50 176 C31 151 13 118 18 77 C22 42 33 16 50 4 Z"/></svg>`}
 function orbMarkup(){return `<div class="orb-shape" aria-hidden="true"></div>`}
 function shapeMarkup(){return settings.geometry==="orbs"?orbMarkup():petalSvg()}
 function sessionShapesMarkup(){return Array.from({length:8}).map((_,i)=>`<div class="breath-shape" data-index="${i}">${shapeMarkup()}</div>`).join("")}
-function startSession(){sessionStartTime=null;isSessionPaused=false;pauseStartedAt=null;currentPhase="prepare";clearSessionControlsHideTimer();document.body.innerHTML=`<main id="session" class="preparing"><div id="timer"><div id="sessionProgress" aria-label="Remaining time"><div id="sessionProgressFill"></div></div></div><div id="phaseLabel"></div><div id="flowerStage" aria-hidden="true"><div id="breathFlower">${sessionShapesMarkup()}</div></div><div id="countdown"><div id="countdownLabel">Prepare</div></div><div id="sessionControls" hidden><button id="pauseResumeButton" type="button">Pause</button><button id="endSessionButton" type="button">End</button></div><div id="endMessage">Completed</div></main>`;applyTheme(settings.theme);if(!settings.showTimer)document.getElementById("timer").style.display="none";if(!settings.showPhaseText)document.getElementById("phaseLabel").style.display="none";document.getElementById("pauseResumeButton").addEventListener("click",e=>{e.stopPropagation();togglePauseResume()});document.getElementById("endSessionButton").addEventListener("click",e=>{e.stopPropagation();endImmediately()});document.getElementById("endMessage").addEventListener("click",()=>{if(currentPhase==="finished")window.location.reload()});document.getElementById("session").addEventListener("click",e=>{if(currentPhase==="finished"||currentPhase==="prepare"||e.target.closest("#sessionControls"))return;showSessionControls(true)});updateFlower(1);startCountdown(3)}
-function startCountdown(seconds){const el=document.getElementById("countdown"),label=document.getElementById("countdownLabel");if(el){el.hidden=false;el.style.display="grid"}if(label){label.style.opacity=".92";label.style.filter="blur(0)"}if(prepareAnimationFrameId)cancelAnimationFrame(prepareAnimationFrameId);let start=null,duration=seconds*1000;function step(now){if(!start)start=now;const raw=Math.min(1,(now-start)/duration),eased=easeInOutSine(raw);updateFlower(1-eased);if(label){label.style.opacity=String(Math.max(0,.92*(1-raw)));label.style.filter=`blur(${(raw*1.4).toFixed(2)}px)`}if(raw<1){prepareAnimationFrameId=requestAnimationFrame(step);return}prepareAnimationFrameId=null;updateFlower(0);if(el){el.hidden=true;el.style.display="none"}document.getElementById("session")?.classList.remove("preparing");sessionStartTime=now;sessionEndsAt=now+settings.duration*60*1000;currentPhase="prepare";startBreathingAnimation()}prepareAnimationFrameId=requestAnimationFrame(step)}
-function startBreathingAnimation(){const timer=document.getElementById("timer"),phaseLabel=document.getElementById("phaseLabel"),rhythm=currentRhythm();function animate(now){if(isSessionPaused)return;const remaining=Math.max(0,Math.ceil((sessionEndsAt-now)/1000));if(settings.showTimer){const fill=timer.querySelector("#sessionProgressFill");if(fill){const ratio=Math.max(0,Math.min(1,(sessionEndsAt-now)/(settings.duration*60*1000)));fill.style.width=`${(ratio*100).toFixed(2)}%`}}const elapsed=(now-sessionStartTime)/1000,cycle=rhythm.inhale+rhythm.exhale,pos=elapsed%cycle;let value,phase,phaseDuration;if(pos<=rhythm.inhale){phase="inhale";phaseDuration=rhythm.inhale;value=easeInOutSine(pos/rhythm.inhale)}else{phase="exhale";phaseDuration=rhythm.exhale;value=1-easeInOutSine((pos-rhythm.inhale)/rhythm.exhale)}if(remaining<=0)endRequested=true;if(phase!==currentPhase){currentPhase=phase;if(settings.showPhaseText)phaseLabel.textContent=phase==="inhale"?"Inhale":"Exhale";playBreathSound(phase,phaseDuration)}updateFlower(value);if(endRequested&&phase==="exhale"&&pos>=cycle-.04){finishSession();return}animationFrameId=requestAnimationFrame(animate)}animationFrameId=requestAnimationFrame(animate)}
-function updateFlower(breathValue){const shapes=document.querySelectorAll(".breath-shape"),flower=document.getElementById("breathFlower");if(!flower)return;const phase=easeInOutSine(breathValue),scale=.54+phase*.26,rotation=(performance.now()/1000)*3;flower.style.transform=`scale(${scale.toFixed(4)}) rotate(${rotation.toFixed(3)}deg)`;shapes.forEach((shape,index)=>{const count=shapes.length,angle=360/count*index,isOrbs=settings.geometry==="orbs",radial=5+phase*28,sx=1.02+phase*.14,sy=1.02+phase*.14,localAngle=isOrbs?angle:(angle+(phase-.5)*2.0*(index%2===0?1:-1)),opacity=isOrbs?(.42+phase*.16):(.42+phase*.14);shape.style.opacity=opacity.toFixed(3);shape.style.transform=`translate(-50%, -50%) rotate(${localAngle.toFixed(3)}deg) translateY(-${radial.toFixed(3)}%) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`})}
+
+function startSession(){
+  sessionStartTime=null;
+  isSessionPaused=false;
+  pauseStartedAt=null;
+  currentPhase="prepare";
+  clearSessionControlsHideTimer();
+  document.body.innerHTML=`<main id="session" class="preparing"><div id="timer"><div id="sessionProgress" aria-label="Remaining time"><div id="sessionProgressFill"></div></div></div><div id="phaseLabel"></div><div id="flowerStage" aria-hidden="true"><div id="breathFlower">${sessionShapesMarkup()}</div></div><div id="countdown"><div id="countdownLabel">Prepare</div></div><div id="sessionControls" hidden><button id="pauseResumeButton" type="button">Pause</button><button id="endSessionButton" type="button">End</button></div><div id="endMessage">Completed</div></main>`;
+  applyTheme(settings.theme);
+  if(!settings.showTimer)document.getElementById("timer").style.display="none";
+  if(!settings.showPhaseText)document.getElementById("phaseLabel").style.display="none";
+  document.getElementById("pauseResumeButton").addEventListener("click",e=>{e.stopPropagation();togglePauseResume()});
+  document.getElementById("endSessionButton").addEventListener("click",e=>{e.stopPropagation();endImmediately()});
+  document.getElementById("endMessage").addEventListener("click",()=>{
+    if(currentPhase==="finished") renderStartScreenSmooth();
+  });
+  document.getElementById("session").addEventListener("click",e=>{
+    if(currentPhase==="finished"||currentPhase==="prepare"||e.target.closest("#sessionControls"))return;
+    showSessionControls(true)
+  });
+  updateFlower(1);
+  startCountdown(3);
+}
+
+function startCountdown(seconds){
+  const el=document.getElementById("countdown"),label=document.getElementById("countdownLabel");
+  if(el){el.hidden=false;el.style.display="grid"}
+  if(label){label.style.opacity=".92";label.style.filter="blur(0)"}
+  if(prepareAnimationFrameId)cancelAnimationFrame(prepareAnimationFrameId);
+  let start=null,duration=seconds*1000;
+  function step(now){
+    if(!start)start=now;
+    const raw=Math.min(1,(now-start)/duration),eased=easeInOutSine(raw);
+    updateFlower(1-eased);
+    if(label){
+      label.style.opacity=String(Math.max(0,.92*(1-raw)));
+      label.style.filter=`blur(${(raw*1.4).toFixed(2)}px)`
+    }
+    if(raw<1){prepareAnimationFrameId=requestAnimationFrame(step);return}
+    prepareAnimationFrameId=null;
+    updateFlower(0);
+    if(el){el.hidden=true;el.style.display="none"}
+    document.getElementById("session")?.classList.remove("preparing");
+    sessionStartTime=now;
+    sessionEndsAt=now+settings.duration*60*1000;
+    currentPhase="prepare";
+    startBreathingAnimation()
+  }
+  prepareAnimationFrameId=requestAnimationFrame(step)
+}
+
+function startBreathingAnimation(){
+  const timer=document.getElementById("timer"),phaseLabel=document.getElementById("phaseLabel"),rhythm=currentRhythm();
+  function animate(now){
+    if(isSessionPaused)return;
+    const remaining=Math.max(0,Math.ceil((sessionEndsAt-now)/1000));
+    if(settings.showTimer){
+      const fill=timer.querySelector("#sessionProgressFill");
+      if(fill){
+        const ratio=Math.max(0,Math.min(1,(sessionEndsAt-now)/(settings.duration*60*1000)));
+        fill.style.width=`${(ratio*100).toFixed(2)}%`
+      }
+    }
+    const elapsed=(now-sessionStartTime)/1000,cycle=rhythm.inhale+rhythm.exhale,pos=elapsed%cycle;
+    let value,phase,phaseDuration;
+    if(pos<=rhythm.inhale){
+      phase="inhale";
+      phaseDuration=rhythm.inhale;
+      value=easeInOutSine(pos/rhythm.inhale)
+    }else{
+      phase="exhale";
+      phaseDuration=rhythm.exhale;
+      value=1-easeInOutSine((pos-rhythm.inhale)/rhythm.exhale)
+    }
+    if(remaining<=0)endRequested=true;
+    if(phase!==currentPhase){
+      currentPhase=phase;
+      if(settings.showPhaseText)phaseLabel.textContent=phase==="inhale"?"Inhale":"Exhale";
+      playBreathSound(phase,phaseDuration)
+    }
+    updateFlower(value);
+    if(endRequested&&phase==="exhale"&&pos>=cycle-.04){
+      finishSession();
+      return
+    }
+    animationFrameId=requestAnimationFrame(animate)
+  }
+  animationFrameId=requestAnimationFrame(animate)
+}
+
+function updateFlower(breathValue){
+  const shapes=document.querySelectorAll(".breath-shape"),flower=document.getElementById("breathFlower");
+  if(!flower)return;
+  const phase=easeInOutSine(breathValue),scale=.54+phase*.26,rotation=(performance.now()/1000)*3;
+  flower.style.transform=`scale(${scale.toFixed(4)}) rotate(${rotation.toFixed(3)}deg)`;
+  shapes.forEach((shape,index)=>{
+    const count=shapes.length,angle=360/count*index,isOrbs=settings.geometry==="orbs",radial=5+phase*28,sx=1.02+phase*.14,sy=1.02+phase*.14,localAngle=isOrbs?angle:(angle+(phase-.5)*2.0*(index%2===0?1:-1)),opacity=isOrbs?(.42+phase*.16):(.42+phase*.14);
+    shape.style.opacity=opacity.toFixed(3);
+    shape.style.transform=`translate(-50%, -50%) rotate(${localAngle.toFixed(3)}deg) translateY(-${radial.toFixed(3)}%) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`
+  })
+}
+
 function clearSessionControlsHideTimer(){if(sessionControlsHideTimer){clearTimeout(sessionControlsHideTimer);sessionControlsHideTimer=null}}
 function showSessionControls(autoHide){const c=document.getElementById("sessionControls");if(c)c.hidden=false;clearSessionControlsHideTimer();if(autoHide&&!isSessionPaused)sessionControlsHideTimer=setTimeout(()=>hideSessionControls(),3000)}
 function hideSessionControls(){if(isSessionPaused)return;const c=document.getElementById("sessionControls");if(c)c.hidden=true;clearSessionControlsHideTimer()}
 function togglePauseResume(){isSessionPaused?resumeSession():pauseSession()}
-function pauseSession(){if(isSessionPaused||currentPhase==="prepare"||currentPhase==="finished")return;isSessionPaused=true;pauseStartedAt=performance.now();clearSessionControlsHideTimer();if(animationFrameId)cancelAnimationFrame(animationFrameId);pauseAudioForSessionPause();const b=document.getElementById("pauseResumeButton");if(b)b.textContent="Resume";showSessionControls(false)}
-function resumeSession(){if(!isSessionPaused)return;const now=performance.now(),pausedFor=now-pauseStartedAt;sessionStartTime+=pausedFor;sessionEndsAt+=pausedFor;pauseStartedAt=null;isSessionPaused=false;const b=document.getElementById("pauseResumeButton");if(b)b.textContent="Pause";resumeAudioAfterSessionPause();showSessionControls(true);startBreathingAnimation()}
+function pauseSession(){
+  if(isSessionPaused||currentPhase==="prepare"||currentPhase==="finished")return;
+  isSessionPaused=true;
+  pauseStartedAt=performance.now();
+  clearSessionControlsHideTimer();
+  if(animationFrameId)cancelAnimationFrame(animationFrameId);
+  pauseAudioForSessionPause();
+  const b=document.getElementById("pauseResumeButton");
+  if(b)b.textContent="Resume";
+  showSessionControls(false)
+}
+function resumeSession(){
+  if(!isSessionPaused)return;
+  const now=performance.now(),pausedFor=now-pauseStartedAt;
+  sessionStartTime+=pausedFor;
+  sessionEndsAt+=pausedFor;
+  pauseStartedAt=null;
+  isSessionPaused=false;
+  const b=document.getElementById("pauseResumeButton");
+  if(b)b.textContent="Pause";
+  resumeAudioAfterSessionPause();
+  showSessionControls(true);
+  startBreathingAnimation()
+}
+
 function playBreathSound(phase,phaseDuration){if(!settings.sound)return;playPersistentAudio(phase,phaseDuration)}
-function playPersistentAudio(key,targetDuration,onEnded){const a=audioElements[key];if(!a){if(onEnded)onEnded();return}try{a.pause();a.currentTime=0;a.muted=false;a.volume=.85;if(Number.isFinite(a.duration)&&a.duration>0&&targetDuration)a.playbackRate=Math.min(4,Math.max(.25,a.duration/targetDuration));else a.playbackRate=1;a.onended=()=>{if(onEnded)onEnded()};a.onerror=()=>{if(onEnded)onEnded()};const p=a.play();if(p)p.catch(()=>{if(onEnded)onEnded()})}catch(e){if(onEnded)onEnded()}}
+function playPersistentAudio(key,targetDuration,onEnded){
+  const a=audioElements[key];
+  if(!a){if(onEnded)onEnded();return}
+  try{
+    a.pause();
+    a.currentTime=0;
+    a.muted=false;
+    a.volume=.85;
+    if(Number.isFinite(a.duration)&&a.duration>0&&targetDuration)a.playbackRate=Math.min(4,Math.max(.25,a.duration/targetDuration));
+    else a.playbackRate=1;
+    a.onended=()=>{if(onEnded)onEnded()};
+    a.onerror=()=>{if(onEnded)onEnded()};
+    const p=a.play();
+    if(p)p.catch(()=>{if(onEnded)onEnded()})
+  }catch(e){if(onEnded)onEnded()}
+}
 function pauseAudioForSessionPause(){pausedAudioKeys=[];Object.entries(audioElements).forEach(([k,a])=>{try{if(a&&!a.paused&&!a.ended){pausedAudioKeys.push(k);a.pause()}}catch(e){}})}
 function resumeAudioAfterSessionPause(){if(!settings.sound)return;const keys=[...pausedAudioKeys];pausedAudioKeys=[];keys.forEach(k=>{const a=audioElements[k];if(!a)return;try{const p=a.play();if(p)p.catch(()=>{})}catch(e){}})}
 function stopAudioSources(){pausedAudioKeys=[];Object.values(audioElements).forEach(a=>{try{a.pause();a.currentTime=0}catch(e){}})}
-function finishSession(){releaseWakeLock();if(animationFrameId)cancelAnimationFrame(animationFrameId);if(prepareAnimationFrameId)cancelAnimationFrame(prepareAnimationFrameId);currentPhase="finished";const session=document.getElementById("session"),label=document.getElementById("phaseLabel");if(label)label.textContent="";if(session)session.classList.add("fade-out");const msg=document.getElementById("endMessage"),returnToStart=()=>setTimeout(()=>window.location.reload(),1000);setTimeout(()=>{if(msg)msg.classList.add("visible");if(settings.sound)playPersistentAudio("end",null,returnToStart);else returnToStart()},560)}
-function endImmediately(){releaseWakeLock();if(animationFrameId)cancelAnimationFrame(animationFrameId);if(prepareAnimationFrameId)cancelAnimationFrame(prepareAnimationFrameId);clearSessionControlsHideTimer();stopAudioSources();if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});window.location.reload()}
+
+function finishSession(){
+  releaseWakeLock();
+  if(animationFrameId)cancelAnimationFrame(animationFrameId);
+  if(prepareAnimationFrameId)cancelAnimationFrame(prepareAnimationFrameId);
+  currentPhase="finished";
+  const session=document.getElementById("session"),label=document.getElementById("phaseLabel");
+  if(label)label.textContent="";
+  if(session)session.classList.add("fade-out");
+  const msg=document.getElementById("endMessage");
+
+  setTimeout(()=>{
+    if(msg)msg.classList.add("visible");
+    if(settings.sound) {
+      playPersistentAudio("end",null,()=>renderStartScreenSmooth());
+    } else {
+      setTimeout(()=>renderStartScreenSmooth(), 1600);
+    }
+  },560);
+}
+
+function renderStartScreenSmooth(){
+  const session=document.getElementById("session"),
+        endMsg=document.getElementById("endMessage");
+  if(session){
+    if(endMsg) endMsg.style.opacity = "0";
+    session.classList.add("fade-to-start");
+    setTimeout(()=>{
+      renderStartScreen();
+    }, 1600);
+  } else {
+    renderStartScreen();
+  }
+}
+
+function renderStartScreen(){
+  document.body.innerHTML=`
+    <main id="app" class="start-screen fade-in-start">
+      <section class="start-content" aria-label="Nomi Start">
+        <div class="start-flower" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <h1>Nomi</h1>
+        <p class="subtitle">Breathing Meditation</p>
+        <p id="sessionSummary" class="session-summary" hidden></p>
+        <button id="startButton" type="button">Start</button>
+        <div class="start-tools" aria-label="Secondary actions">
+          <button id="settingsButton" class="settings-button" type="button" aria-label="Settings">
+            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="6" y="12" width="52" height="7" rx="3.5"></rect><circle cx="30" cy="15.5" r="8.5"></circle><rect x="6" y="29" width="52" height="7" rx="3.5"></rect><circle cx="43" cy="32.5" r="8.5"></circle><rect x="6" y="46" width="52" height="7" rx="3.5"></rect><circle cx="22" cy="49.5" r="8.5"></circle></svg>
+          </button>
+          <a id="shareLink" class="share-link" href="#" aria-label="Share">
+            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="18" cy="32" r="9"></circle><circle cx="47" cy="16" r="9"></circle><circle cx="47" cy="48" r="9"></circle><rect x="22" y="22" width="28" height="7" rx="3.5" transform="rotate(-29 36 25.5)"></rect><rect x="22" y="35" width="28" height="7" rx="3.5" transform="rotate(29 36 38.5)"></rect></svg>
+          </a>
+        </div>
+      </section>
+      <section id="settingsModal" class="modal" aria-label="Settings" hidden>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+          <div class="modal-header"><h2 id="settingsTitle">Settings</h2><button id="closeSettingsButton" class="close-button" type="button" aria-label="Close Settings">Close</button></div>
+          <div class="settings-section theme-section"><h3>Theme</h3><div class="segmented theme-options" role="radiogroup" aria-label="Theme"><label><input type="radio" name="theme" value="ocean"><span>Ocean</span></label><label><input type="radio" name="theme" value="twilight"><span>Twilight</span></label><label><input type="radio" name="theme" value="forest"><span>Forest</span></label></div></div>
+          <div class="settings-section geometry-section"><h3>Animation Style</h3><div class="segmented geometry-options" role="radiogroup" aria-label="Animation Style"><label><input type="radio" name="geometry" value="petals"><span>Petals</span></label><label><input type="radio" name="geometry" value="orbs"><span>Orbs</span></label></div></div>
+          <div class="settings-section duration-section"><h3>Duration</h3><div class="segmented duration-options" role="radiogroup" aria-label="Duration"><label><input type="radio" name="duration" value="1"><span>1 min</span></label><label><input type="radio" name="duration" value="3"><span>3 min</span></label><label><input type="radio" name="duration" value="5"><span>5 min</span></label><label><input type="radio" name="duration" value="10"><span>10 min</span></label></div></div>
+          <div class="settings-section rhythm-section"><h3>Breathing Rhythm</h3><div class="rhythm-options" role="radiogroup" aria-label="Breathing Rhythm"><label><input type="radio" name="rhythm" value="balanced"><span><strong>Balanced</strong><small>4.5 / 4.5 sec</small></span></label><label><input type="radio" name="rhythm" value="longerExhale"><span><strong>Longer Exhale</strong><small>4.5 / 6.5 sec</small></span></label></div></div>
+          <div class="settings-section switches"><label><span>Show Remaining Time</span><input id="showTimerToggle" type="checkbox"></label><label><span>Show Breathing Text</span><input id="showPhaseTextToggle" type="checkbox"></label><label><span>Breathing Sound</span><input id="soundToggle" type="checkbox"></label><label><span>Start in Fullscreen</span><input id="fullscreenToggle" type="checkbox"></label></div>
+          <div class="settings-actions"><button id="saveSettingsButton" class="save-button" type="button">Save</button></div>
+        </div>
+      </section>
+    </main>
+  `;
+  bindStartScreenEvents();
+  applySettingsToUi();
+  applyTheme(settings.theme);
+}
+
+function endImmediately(){
+  releaseWakeLock();
+  if(animationFrameId)cancelAnimationFrame(animationFrameId);
+  if(prepareAnimationFrameId)cancelAnimationFrame(prepareAnimationFrameId);
+  clearSessionControlsHideTimer();
+  stopAudioSources();
+  if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+  renderStartScreen();
+}
+
 function easeInOutSine(v){v=Math.max(0,Math.min(1,v));return-(Math.cos(Math.PI*v)-1)/2}
+
+// Initialize application
+initApp();

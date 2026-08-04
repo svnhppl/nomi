@@ -57,6 +57,39 @@
       .start-content .settings-button,
       .start-content .share-link{width:32px;height:32px;}
     }
+
+    /* Hardware-accelerated smooth cross-fade transition styles */
+    #session, .start-screen {
+      transition: opacity 1.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                  filter 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity, filter;
+    }
+
+    #session.fade-to-start {
+      opacity: 0 !important;
+      filter: blur(8px);
+      pointer-events: none;
+    }
+
+    #session.fade-to-start #endMessage {
+      opacity: 0 !important;
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    .start-screen.fade-in-start {
+      animation: fadeInStart 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes fadeInStart {
+      0% {
+        opacity: 0;
+        filter: blur(6px);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+      }
+    }
   </style>
 </head>
 <body>
