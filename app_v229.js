@@ -22,6 +22,9 @@ function initApp(){
 
 function bindStartScreenEvents(){
   const startBtn=document.getElementById("startButton"),
+        infoBtn=document.getElementById("infoButton"),
+        infoMdl=document.getElementById("infoModal"),
+        closeInfoBtn=document.getElementById("closeInfoButton"),
         settingsBtn=document.getElementById("settingsButton"),
         settingsMdl=document.getElementById("settingsModal"),
         closeSettingsBtn=document.getElementById("closeSettingsButton"),
@@ -40,6 +43,11 @@ function bindStartScreenEvents(){
       if(settings.fullscreen){try{await document.documentElement.requestFullscreen()}catch(e){}}
     });
   }
+
+  if(infoBtn) infoBtn.addEventListener("click",openInfo);
+  if(closeInfoBtn) closeInfoBtn.addEventListener("click",closeInfo);
+  if(infoMdl) infoMdl.addEventListener("click",e=>{if(e.target===infoMdl)closeInfo()});
+
   if(settingsBtn) settingsBtn.addEventListener("click",openSettings);
   if(closeSettingsBtn) closeSettingsBtn.addEventListener("click",closeSettings);
   if(settingsMdl) settingsMdl.addEventListener("click",e=>{if(e.target===settingsMdl)closeSettings()});
@@ -51,7 +59,7 @@ function releaseWakeLock(){try{if(wakeLock){const lock=wakeLock;wakeLock=null;lo
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&sessionEndsAt&&currentPhase!=="finished"&&!isSessionPaused)acquireWakeLock()});
 window.addEventListener("beforeunload",releaseWakeLock);
 
-function loadSettings(){try{const saved={...DEFAULTS,...JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}")} ;if(!RHYTHMS[saved.rhythm])saved.rhythm="longerExhale";if(!["petals","orbs"].includes(saved.geometry))saved.geometry="orbs";return saved}catch(e){return {...DEFAULTS}}}
+function loadSettings(){try{const saved={...DEFAULTS,...JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}")};if(!RHYTHMS[saved.rhythm])saved.rhythm="longerExhale";if(!["petals","orbs"].includes(saved.geometry))saved.geometry="orbs";return saved}catch(e){return {...DEFAULTS}}}
 function persistSettings(){localStorage.setItem(STORAGE_KEY,JSON.stringify(settings))}
 function currentRhythm(){return RHYTHMS[settings.rhythm]||RHYTHMS.longerExhale}
 function applyTheme(theme){document.documentElement.dataset.theme=theme||"ocean";document.documentElement.dataset.geometry=settings.geometry||"orbs"}
@@ -71,6 +79,24 @@ function applySettingsToUi(){
   updateSummary();
 }
 function updateSummary(){const el=document.getElementById("sessionSummary");if(el) el.textContent=Number(settings.duration)===1?"1 Minute":`${settings.duration} Minutes`}
+
+function openInfo(){
+  const infoModal=document.getElementById("infoModal");
+  if(infoModal){
+    infoModal.hidden=false;
+    infoModal.classList.remove("closing");
+    requestAnimationFrame(()=>infoModal.classList.add("open"));
+  }
+}
+function closeInfo(){
+  const infoModal=document.getElementById("infoModal");
+  if(infoModal){
+    infoModal.classList.remove("open");
+    infoModal.classList.add("closing");
+    setTimeout(()=>{infoModal.hidden=true;infoModal.classList.remove("closing")},170);
+  }
+}
+
 function openSettings(){
   const settingsModal=document.getElementById("settingsModal");
   applySettingsToUi();
@@ -314,14 +340,37 @@ function renderStartScreen(){
         <p id="sessionSummary" class="session-summary" hidden></p>
         <button id="startButton" type="button">Start</button>
         <div class="start-tools" aria-label="Secondary actions">
-          <button id="settingsButton" class="settings-button" type="button" aria-label="Settings">
-            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="6" y="12" width="52" height="7" rx="3.5"></rect><circle cx="30" cy="15.5" r="8.5"></circle><rect x="6" y="29" width="52" height="7" rx="3.5"></rect><circle cx="43" cy="32.5" r="8.5"></circle><rect x="6" y="46" width="52" height="7" rx="3.5"></rect><circle cx="22" cy="49.5" r="8.5"></circle></svg>
+          <button id="infoButton" class="tool-button" type="button" aria-label="About Nomi">
+            ${info_svg}
           </button>
-          <a id="shareLink" class="share-link" href="#" aria-label="Share">
-            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="18" cy="32" r="9"></circle><circle cx="47" cy="16" r="9"></circle><circle cx="47" cy="48" r="9"></circle><rect x="22" y="22" width="28" height="7" rx="3.5" transform="rotate(-29 36 25.5)"></rect><rect x="22" y="35" width="28" height="7" rx="3.5" transform="rotate(29 36 38.5)"></rect></svg>
+          <button id="settingsButton" class="tool-button" type="button" aria-label="Settings">
+            ${settings_svg}
+          </button>
+          <a id="shareLink" class="tool-button" href="#" aria-label="Share">
+            ${share_svg}
           </a>
         </div>
       </section>
+
+      <!-- Info Modal -->
+      <section id="infoModal" class="modal" aria-label="About Nomi" hidden>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+          <div class="modal-header">
+            <h2 id="infoTitle">About Nomi</h2>
+            <button id="closeInfoButton" class="close-button" type="button" aria-label="Close Info">Close</button>
+          </div>
+          <div class="info-body">
+            <p>A minimalist space to catch your breath. Simply follow the rhythm:</p>
+            <ul>
+              <li><strong>Inhale</strong> when the circle expands</li>
+              <li><strong>Exhale</strong> when it contracts</li>
+            </ul>
+            <p class="info-footer">No tracking, no login, no data. Just you and your breath.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Modal -->
       <section id="settingsModal" class="modal" aria-label="Settings" hidden>
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
           <div class="modal-header"><h2 id="settingsTitle">Settings</h2><button id="closeSettingsButton" class="close-button" type="button" aria-label="Close Settings">Close</button></div>

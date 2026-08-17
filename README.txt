@@ -1,15 +1,12 @@
-Nomi Web & PWA Update Pack (v2.2.9 - Reordered Settings)
+Nomi Web & PWA Update Pack (v2.3.0 - 3 Toolbar Icons & Info Dialog)
 
-Inhalt dieses ZIP-Archivs:
-1. index.html (mit aktualisierter Reihenfolge der Einstellungen: Duration, Rhythm, Animation Style, Theme)
-2. app_v229.js (mit synchronisiertem renderStartScreen & Settings Handler)
-3. manifest.json
-4. background.js
-5. README.txt
+Inhalt:
+1. index.html (Mit 3er-Icon-Reihe: Info [i], Settings, Share + Info-Modal auf Englisch)
+2. app_v229.js (Event-Handling für Info-Modal + synchronisierter StartScreen)
+3. background.js
+4. manifest.json
 
-Reihenfolge im Einstellungsmenü:
-1. Duration
-2. Rhythm
-3. Animation Style
-4. Theme
-5. Switches (Show Remaining Time, Show Breathing Text, Breathing Sound, Start in Fullscreen)
+Design-Details:
+- Alle 3 Icons teilen dieselbe Strichstärke (7px Geometrie), Rundungsradien und Farbgebung (--accent).
+- Alle Buttons besitzen identische Hover- und Klick-Zustände.
+- Info-Fenster zeigt die Anleitung und Philosophie auf Englisch im Nomi-Design.
