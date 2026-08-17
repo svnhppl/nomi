@@ -1,11 +1,15 @@
-Nomi Web & PWA Update Pack
+Nomi Web & PWA Update Pack (v2.2.9 - Reordered Settings)
 
 Inhalt dieses ZIP-Archivs:
-1. index.html (mit eingebundenem apple-touch-icon.png & Web Manifest für Smartphone Home-Screen)
-2. app_v229.js
+1. index.html (mit aktualisierter Reihenfolge der Einstellungen: Duration, Rhythm, Animation Style, Theme)
+2. app_v229.js (mit synchronisiertem renderStartScreen & Settings Handler)
 3. manifest.json
 4. background.js
-5. apple-touch-icon.png (das neue 180x180 Icon)
+5. README.txt
 
-Hinweis:
-Vergiss nicht, dein hochgeladenes Icon als 'apple-touch-icon.png' im Hauptverzeichnis auf GitHub abzulegen, falls du es nicht aus diesem Paket verwenden möchtest.
+Reihenfolge im Einstellungsmenü:
+1. Duration
+2. Rhythm
+3. Animation Style
+4. Theme
+5. Switches (Show Remaining Time, Show Breathing Text, Breathing Sound, Start in Fullscreen)
