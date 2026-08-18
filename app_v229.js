@@ -428,9 +428,16 @@ function updateFlower(breathValue) {
   const shapes = document.querySelectorAll(".breath-shape"),
         flower = document.getElementById("breathFlower");
   if (!flower) return;
+  
+  // Clean, non-breaking responsive scale purely inside transform
+  const isDesktop = window.innerWidth >= 768 && window.innerHeight >= 600;
+  const baseScale = isDesktop ? 0.72 : 0.54;
+  const growth = isDesktop ? 0.34 : 0.26;
+  
   const phase = easeInOutSine(breathValue),
-        scale = .54 + phase * .26,
+        scale = baseScale + phase * growth,
         rotation = (performance.now() / 1000) * 3;
+        
   flower.style.transform = `scale(${scale.toFixed(4)}) rotate(${rotation.toFixed(3)}deg)`;
   shapes.forEach((shape, index) => {
     const count = shapes.length,
@@ -630,13 +637,13 @@ function renderStartScreen() {
         <button id="startButton" type="button">Start</button>
         <div class="start-tools" aria-label="Secondary actions">
           <button id="infoButton" class="tool-button" type="button" aria-label="About Nomi">
-            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M32 6 C17.64 6 6 17.64 6 32 C6 46.36 17.64 58 32 58 C46.36 58 58 46.36 58 32 C58 17.64 46.36 6 32 6 Z M32 51 C21.51 51 13 42.49 13 32 C13 21.51 21.51 13 32 13 C42.49 13 51 21.51 51 32 C51 42.49 42.49 51 32 51 Z"></path><circle cx="32" cy="22" r="4.2"></circle><rect x="28.5" y="29" width="7" height="16" rx="3.5"></rect></svg>
+            ${info_svg}
           </button>
           <button id="settingsButton" class="tool-button" type="button" aria-label="Settings">
-            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="6" y="12" width="52" height="7" rx="3.5"></rect><circle cx="30" cy="15.5" r="8.5"></circle><rect x="6" y="29" width="52" height="7" rx="3.5"></rect><circle cx="43" cy="32.5" r="8.5"></circle><rect x="6" y="46" width="52" height="7" rx="3.5"></rect><circle cx="22" cy="49.5" r="8.5"></circle></svg>
+            ${settings_svg}
           </button>
           <a id="shareLink" class="tool-button" href="#" aria-label="Share">
-            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="18" cy="32" r="9"></circle><circle cx="47" cy="16" r="9"></circle><circle cx="47" cy="48" r="9"></circle><rect x="22" y="22" width="28" height="7" rx="3.5" transform="rotate(-29 36 25.5)"></rect><rect x="22" y="35" width="28" height="7" rx="3.5" transform="rotate(29 36 38.5)"></rect></svg>
+            ${share_svg}
           </a>
         </div>
       </section>
