@@ -17,7 +17,7 @@
 
   <link rel="stylesheet" href="style_v224.css">
   <style>
-    /* Clean Toolbar & Start screen tools (Info, Settings, Share) */
+    /* Toolbar Buttons (Info, Settings, Share) */
     .start-content .tool-button {
       margin: 0;
       padding: 0;
@@ -40,7 +40,7 @@
     .start-content .tool-button:hover,
     .start-content .tool-button:active {
       opacity: 0.95;
-      background: rgba(var(--petal-1), .08);
+      background: rgba(var(--petal-1), 0.08);
       text-decoration: none;
     }
     .start-tools {
@@ -56,14 +56,16 @@
       display: block;
       fill: currentColor;
     }
-    .start-content #startButton { margin-top: 0; }
-    @media (max-height:650px) {
+    .start-content #startButton {
+      margin-top: 0;
+    }
+    @media (max-height: 650px) {
       .start-tools { margin-top: 14px; gap: 18px; }
       .start-tools svg { width: 20px; height: 20px; }
       .start-content .tool-button { width: 32px; height: 32px; }
     }
 
-    /* Info modal styling */
+    /* Info Modal Styling */
     .info-body {
       text-align: left;
       line-height: 1.6;
@@ -122,57 +124,94 @@
   </style>
 </head>
 <body>
-  <main id="app" class="start-screen">
-    <section class="start-content" aria-label="Nomi Start">
-      <div class="start-flower" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-      <h1>Nomi</h1>
-      <p class="subtitle">Breathing Meditation</p>
-      <p id="sessionSummary" class="session-summary" hidden></p>
-      <button id="startButton" type="button">Start</button>
-      <div class="start-tools" aria-label="Secondary actions">
-        <button id="infoButton" class="tool-button" type="button" aria-label="About Nomi">
-          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M32 6 C17.64 6 6 17.64 6 32 C6 46.36 17.64 58 32 58 C46.36 58 58 46.36 58 32 C58 17.64 46.36 6 32 6 Z M32 51 C21.51 51 13 42.49 13 32 C13 21.51 21.51 13 32 13 C42.49 13 51 21.51 51 32 C51 42.49 42.49 51 32 51 Z"></path><circle cx="32" cy="22" r="4.2"></circle><rect x="28.5" y="29" width="7" height="16" rx="3.5"></rect></svg>
-        </button>
-        <button id="settingsButton" class="tool-button" type="button" aria-label="Settings">
-          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="6" y="12" width="52" height="7" rx="3.5"></rect><circle cx="30" cy="15.5" r="8.5"></circle><rect x="6" y="29" width="52" height="7" rx="3.5"></rect><circle cx="43" cy="32.5" r="8.5"></circle><rect x="6" y="46" width="52" height="7" rx="3.5"></rect><circle cx="22" cy="49.5" r="8.5"></circle></svg>
-        </button>
-        <a id="shareLink" class="tool-button" href="#" aria-label="Share">
-          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="18" cy="32" r="9"></circle><circle cx="47" cy="16" r="9"></circle><circle cx="47" cy="48" r="9"></circle><rect x="22" y="22" width="28" height="7" rx="3.5" transform="rotate(-29 36 25.5)"></rect><rect x="22" y="35" width="28" height="7" rx="3.5" transform="rotate(29 36 38.5)"></rect></svg>
-        </a>
-      </div>
-    </section>
-
-    <!-- Info Modal -->
-    <section id="infoModal" class="modal" aria-label="About Nomi" hidden>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
-        <div class="modal-header">
-          <h2 id="infoTitle">About Nomi</h2>
-          <button id="closeInfoButton" class="close-button" type="button" aria-label="Close Info">Close</button>
+  <main id="app" class="start-screen fade-in-start">
+      <section class="start-content" aria-label="Nomi Start">
+        <div class="start-flower" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <h1>Nomi</h1>
+        <p class="subtitle">Breathing Meditation</p>
+        <p id="sessionSummary" class="session-summary" hidden></p>
+        <button id="startButton" type="button">Start</button>
+        <div class="start-tools" aria-label="Secondary actions">
+          <button id="infoButton" class="tool-button" type="button" aria-label="About Nomi">
+            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M32 6 C17.64 6 6 17.64 6 32 C6 46.36 17.64 58 32 58 C46.36 58 58 46.36 58 32 C58 17.64 46.36 6 32 6 Z M32 51 C21.51 51 13 42.49 13 32 C13 21.51 21.51 13 32 13 C42.49 13 51 21.51 51 32 C51 42.49 42.49 51 32 51 Z"></path><circle cx="32" cy="22" r="4.2"></circle><rect x="28.5" y="29" width="7" height="16" rx="3.5"></rect></svg>
+          </button>
+          <button id="settingsButton" class="tool-button" type="button" aria-label="Settings">
+            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="6" y="12" width="52" height="7" rx="3.5"></rect><circle cx="30" cy="15.5" r="8.5"></circle><rect x="6" y="29" width="52" height="7" rx="3.5"></rect><circle cx="43" cy="32.5" r="8.5"></circle><rect x="6" y="46" width="52" height="7" rx="3.5"></rect><circle cx="22" cy="49.5" r="8.5"></circle></svg>
+          </button>
+          <a id="shareLink" class="tool-button" href="#" aria-label="Share">
+            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="18" cy="32" r="9"></circle><circle cx="47" cy="16" r="9"></circle><circle cx="47" cy="48" r="9"></circle><rect x="22" y="22" width="28" height="7" rx="3.5" transform="rotate(-29 36 25.5)"></rect><rect x="22" y="35" width="28" height="7" rx="3.5" transform="rotate(29 36 38.5)"></rect></svg>
+          </a>
         </div>
-        <div class="info-body">
-          <p>A minimalist space to catch your breath. Simply follow the rhythm:</p>
-          <ul>
-            <li><strong>Inhale</strong> when the circle expands</li>
-            <li><strong>Exhale</strong> when it contracts</li>
-          </ul>
-          <p class="info-footer">No tracking, no login, no data. Just you and your breath.</p>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Settings Modal -->
-    <section id="settingsModal" class="modal" aria-label="Settings" hidden>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-        <div class="modal-header"><h2 id="settingsTitle">Settings</h2><button id="closeSettingsButton" class="close-button" type="button" aria-label="Close Settings">Close</button></div>
-        <div class="settings-section duration-section"><h3>Duration</h3><div class="segmented duration-options" role="radiogroup" aria-label="Duration"><label><input type="radio" name="duration" value="1"><span>1 min</span></label><label><input type="radio" name="duration" value="3"><span>3 min</span></label><label><input type="radio" name="duration" value="5"><span>5 min</span></label><label><input type="radio" name="duration" value="10"><span>10 min</span></label></div></div>
-        <div class="settings-section rhythm-section"><h3>Breathing Rhythm</h3><div class="rhythm-options" role="radiogroup" aria-label="Breathing Rhythm"><label><input type="radio" name="rhythm" value="balanced"><span><strong>Balanced</strong><small>4.5 / 4.5 sec</small></span></label><label><input type="radio" name="rhythm" value="longerExhale"><span><strong>Longer Exhale</strong><small>4.5 / 6.5 sec</small></span></label></div></div>
-        <div class="settings-section geometry-section"><h3>Animation Style</h3><div class="segmented geometry-options" role="radiogroup" aria-label="Animation Style"><label><input type="radio" name="geometry" value="petals"><span>Petals</span></label><label><input type="radio" name="geometry" value="orbs"><span>Orbs</span></label></div></div>
-        <div class="settings-section theme-section"><h3>Theme</h3><div class="segmented theme-options" role="radiogroup" aria-label="Theme"><label><input type="radio" name="theme" value="ocean"><span>Ocean</span></label><label><input type="radio" name="theme" value="twilight"><span>Twilight</span></label><label><input type="radio" name="theme" value="forest"><span>Forest</span></label></div></div>
-        <div class="settings-section switches"><label><span>Show Remaining Time</span><input id="showTimerToggle" type="checkbox"></label><label><span>Show Breathing Text</span><input id="showPhaseTextToggle" type="checkbox"></label><label><span>Breathing Sound</span><input id="soundToggle" type="checkbox"></label><label><span>Start in Fullscreen</span><input id="fullscreenToggle" type="checkbox"></label></div>
-        <div class="settings-actions"><button id="saveSettingsButton" class="save-button" type="button">Save</button></div>
-      </div>
-    </section>
-  </main>
-  <script src="app_v229.js?v=233"></script>
+      <!-- Info Modal -->
+      <section id="infoModal" class="modal" aria-label="About Nomi" hidden>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+          <div class="modal-header">
+            <h2 id="infoTitle">About Nomi</h2>
+            <button id="closeInfoButton" class="close-button" type="button" aria-label="Close Info">Close</button>
+          </div>
+          <div class="info-body">
+            <p>A minimalist space to catch your breath. Simply follow the rhythm:</p>
+            <ul>
+              <li><strong>Inhale</strong> when the circle expands</li>
+              <li><strong>Exhale</strong> when it contracts</li>
+            </ul>
+            <p class="info-footer">No tracking, no login, no data. Just you and your breath.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Modal -->
+      <section id="settingsModal" class="modal" aria-label="Settings" hidden>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+          <div class="modal-header">
+            <h2 id="settingsTitle">Settings</h2>
+            <button id="closeSettingsButton" class="close-button" type="button" aria-label="Close Settings">Close</button>
+          </div>
+          <div class="settings-section duration-section">
+            <h3>Duration</h3>
+            <div class="segmented duration-options" role="radiogroup" aria-label="Duration">
+              <label><input type="radio" name="duration" value="1"><span>1 min</span></label>
+              <label><input type="radio" name="duration" value="3"><span>3 min</span></label>
+              <label><input type="radio" name="duration" value="5"><span>5 min</span></label>
+              <label><input type="radio" name="duration" value="10"><span>10 min</span></label>
+            </div>
+          </div>
+          <div class="settings-section rhythm-section">
+            <h3>Breathing Rhythm</h3>
+            <div class="rhythm-options" role="radiogroup" aria-label="Breathing Rhythm">
+              <label><input type="radio" name="rhythm" value="balanced"><span><strong>Balanced</strong><small>4.5 / 4.5 sec</small></span></label>
+              <label><input type="radio" name="rhythm" value="longerExhale"><span><strong>Longer Exhale</strong><small>4.5 / 6.5 sec</small></span></label>
+            </div>
+          </div>
+          <div class="settings-section geometry-section">
+            <h3>Animation Style</h3>
+            <div class="segmented geometry-options" role="radiogroup" aria-label="Animation Style">
+              <label><input type="radio" name="geometry" value="petals"><span>Petals</span></label>
+              <label><input type="radio" name="geometry" value="orbs"><span>Orbs</span></label>
+            </div>
+          </div>
+          <div class="settings-section theme-section">
+            <h3>Theme</h3>
+            <div class="segmented theme-options" role="radiogroup" aria-label="Theme">
+              <label><input type="radio" name="theme" value="ocean"><span>Ocean</span></label>
+              <label><input type="radio" name="theme" value="twilight"><span>Twilight</span></label>
+              <label><input type="radio" name="theme" value="forest"><span>Forest</span></label>
+            </div>
+          </div>
+          <div class="settings-section switches">
+            <label><span>Show Remaining Time</span><input id="showTimerToggle" type="checkbox"></label>
+            <label><span>Show Breathing Text</span><input id="showPhaseTextToggle" type="checkbox"></label>
+            <label><span>Breathing Sound</span><input id="soundToggle" type="checkbox"></label>
+            <label><span>Start in Fullscreen</span><input id="fullscreenToggle" type="checkbox"></label>
+          </div>
+          <div class="settings-actions">
+            <button id="saveSettingsButton" class="save-button" type="button">Save</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  <script src="app_v230.js"></script>
 </body>
 </html>
